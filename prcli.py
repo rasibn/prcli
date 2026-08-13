@@ -37,8 +37,8 @@ ORDER_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "order.jso
 CHIP_STYLE = {
     **{priority: "bold red" for priority in sync_prs.PRIORITIES},
     sync_prs.L_QA_DONE: "bold green",
-    sync_prs.L_QA_NEEDED: "magenta",
-    sync_prs.L_CONFLICTS: "red",
+    sync_prs.L_QA_NEEDED: "bold blue",
+    sync_prs.L_CONFLICTS: "bold blue",
     sync_prs.L_OUTDATED: "yellow",
     sync_prs.L_UNRESOLVED: "#ff8800",
 }

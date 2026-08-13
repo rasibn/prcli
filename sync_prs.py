@@ -7,6 +7,9 @@ State labels managed by this script (added/removed automatically):
   - "unresolved comments"  open (unresolved) review threads exist
   - "size: small|medium|large"  additions+deletions: <120 / 120-400 / >400
 
+"conflicts" and "outdated" are mutually exclusive — a PR never carries both
+(conflicts wins if both apply), mirroring how priorities work.
+
 Manual labels (read-only here, set by the user): P0 - Immediate, P1 - High,
 P3 - Low, P4 - Lowest,
 need qa testing, ready to release.
@@ -117,6 +120,12 @@ def desired_state_labels(pr: dict) -> dict:
         L_OUTDATED: pr["behind_by"] > 0 if pr["behind_by"] is not None else None,
         L_UNRESOLVED: pr["unresolved"] > 0 if pr["unresolved"] is not None else None,
     }
+    # "conflicts" and "outdated" are mutually exclusive, like priorities:
+    # conflicts wins when both would apply.
+    if state[L_CONFLICTS] is True:
+        state[L_OUTDATED] = False
+    elif state[L_OUTDATED] is True:
+        state[L_CONFLICTS] = False
     want = size_label(pr)
     for s in SIZES:
         state[s] = s == want
